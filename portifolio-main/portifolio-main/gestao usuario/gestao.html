@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="gestao.css">
+    <title>Gestão de Usuários</title>
+</head>
+<body>
+    
+    <div class="container">
+        <h1>Gestão de Usuários</h1>
+    
+        <div class="actions">
+            <input type="text" id="nome" placeholder="Nome">
+            <input type="text" id="email" placeholder="Email">
+            <button onclick="adicionarUsuario()">Adicionar Usuário</button>
+        </div>
+    
+        <div class="alert" id="alert"></div>
+    
+        <table id="usuariosTabela">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Os usuários serão listados aqui -->
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        let usuarios = [];
+        let idCounter = 1;
+    
+        function adicionarUsuario() {
+            const nome = document.getElementById("nome").value;
+            const email = document.getElementById("email").value;
+    
+            if (!nome || !email) {
+                showAlert("Por favor, preencha todos os campos.");
+                return;
+            }
+    
+            const usuario = { id: idCounter++, nome: nome, email: email };
+            usuarios.push(usuario);
+            renderizarTabela();
+            limparCampos();
+        }
+    
+        function removerUsuario(id) {
+            usuarios = usuarios.filter(usuario => usuario.id !== id);
+            renderizarTabela();
+        }
+    
+        function renderizarTabela() {
+            const tbody = document.getElementById("usuariosTabela").getElementsByTagName('tbody')[0];
+            tbody.innerHTML = '';
+    
+            usuarios.forEach(usuario => {
+                const row = tbody.insertRow();
+                row.insertCell(0).textContent = usuario.id;
+                row.insertCell(1).textContent = usuario.nome;
+                row.insertCell(2).textContent = usuario.email;
+    
+                const actionsCell = row.insertCell(3);
+                const removeButton = document.createElement("button");
+                removeButton.textContent = "Remover";
+                removeButton.classList.add("remove-btn");
+                removeButton.onclick = () => removerUsuario(usuario.id);
+                actionsCell.appendChild(removeButton);
+            });
+        }
+    
+        function limparCampos() {
+            document.getElementById("nome").value = '';
+            document.getElementById("email").value = '';
+        }
+    
+        function showAlert(message) {
+            const alertDiv = document.getElementById("alert");
+            alertDiv.textContent = message;
+            setTimeout(() => alertDiv.textContent = '', 3000);
+        }
+    </script>
+</body>
+</html>
